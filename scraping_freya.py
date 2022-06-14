@@ -1,14 +1,12 @@
 
 
-from csv import reader
+# from csv import reader
 from bs4 import BeautifulSoup
 import requests
-# import csv
-# from bs4 import BeautifulSoup
+import csv
 from fake_useragent import UserAgent
+
 ua = UserAgent()
-
-
 url = "https://freyamebel.com/"
 headers = {
     'user-agent': ua.random
