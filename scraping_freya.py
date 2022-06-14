@@ -31,6 +31,7 @@ all_select = soup_respon.select(".category-wall > a")
 
 # with open('111.csv', 'w', encoding='utf-8') as file:
 #     file.write(str(all_select))
+#122312123123
 
 with open('111.csv', 'a', encoding='utf-8') as file:
     file.write(str(all_select))
