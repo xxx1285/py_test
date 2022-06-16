@@ -12,9 +12,11 @@ link = f'https://cosmohit.ua/catalogue/cosmetics/page/{page_number}'
 response = requests.get(link, headers=headers).text
 soup = BeautifulSoup(response, 'lxml')
 
+
 block = soup.find('div', class_='items')
 all_images = block.find_all('div', class_=re.compile("item_"))
 
 for image in all_images:
+    image_link = image.find('a').get('href')
     print(image)
     print('\n\n')

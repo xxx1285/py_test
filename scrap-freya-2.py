@@ -18,7 +18,6 @@ response = requests.get(url, headers=headers).text
 #     file.write(response)
 
 soup_respon = BeautifulSoup(response, 'lxml')
-
 # all_select = soup_respon.select(".items > div > a")
 nomer = 0
 
@@ -36,15 +35,14 @@ with open('111.csv', 'w', encoding='utf-8') as file:
             'a>span:last-child>span:nth-child(2)').text
         prod_href = bit.select_one('a').get('href')
 
-        prod_price_url = '.items>div>div:last-child>div:first-child'
+        prod_price_url = 'div:last-child>div:first-child'
 
         if bit.select_one(prod_price_url) is None:
             prod_price = '0'
         else:
             prod_price = bit.select_one(prod_price_url).text
-            print(type(prod_price))
-        # prod_price2 = prod_price.text
-        # print(prod_price)
+            prod_price = prod_price.replace(' ', '')[:-3]
+
 
         csv_writer.writerow(
             {'nomer': nomer,
