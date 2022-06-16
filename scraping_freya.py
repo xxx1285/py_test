@@ -16,8 +16,8 @@ print(headers)
 response = requests.get(url, headers=headers).text
 """Делаем запрос по url + hesders"""
 
-with open('111.csv', 'w', encoding='utf-8') as file:
-    file.write(response)
+# with open('111.csv', 'w', encoding='utf-8') as file:
+#     file.write(response)
 
 soup_respon = BeautifulSoup(response, 'lxml')
 
@@ -31,11 +31,15 @@ all_select = soup_respon.select(".category-wall > a")
 #     file.write(str(all_select))
 #122312123123
 
-with open('111.csv', 'a', encoding='utf-8') as file:
-    file.write(str(all_select))
+with open('111.csv', 'w', encoding='utf-8') as file:
+    # file.write(str(all_select))
     for link_a in all_select:
-        result_url = link_a.get_text()
+        result_url = link_a.get('href')
         print(result_url)
+        result_url2 = link_a.get_text()
+        print(result_url2)
+        file.write(result_url)
+        # file.write(str(result_url2))
         # file.write(result_url, delimiter=";")
         # writer = csv.writer(file, delimiter =";",quoting=csv.QUOTE_MINIMAL)
         # writer.writerow(["a","b"])
@@ -55,9 +59,9 @@ with open('111.csv', 'a', encoding='utf-8') as file:
 #         print(csv_noda)
 #         return csv_noda
 
-print(type(response))
-print(type(soup_respon))
-print(type(all_select))
+# print(type(response))
+# print(type(soup_respon))
+# print(type(all_select))
 # print(response2)
 # print(status_url)
 

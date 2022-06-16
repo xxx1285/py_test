@@ -1,10 +1,12 @@
+from datetime import datetime
+import time
 # from csv import reader
 from bs4 import BeautifulSoup
 import requests
 import csv
 from fake_useragent import UserAgent
 
-url = "https://cosmohit.ua/catalogue/cosmetics/cosmetics_for_face/cream"
+url = "https://cosmohit.ua/catalogue/cream/brand-zein_obagi"
 
 
 headers = {
@@ -20,44 +22,23 @@ response = requests.get(url, headers=headers).text
 soup_respon = BeautifulSoup(response, 'lxml')
 
 # all_select = soup_respon.select(".items > div > a")
-nomer = 0
 
 with open('111.csv', 'w', encoding='utf-8') as file:
-    field_names = ['nomer', 'name', 'name_original', 'href', 'price']
+    field_names = ['name', 'name_original', 'href', 'img', 'price']
     csv_writer = csv.DictWriter(file, fieldnames=field_names)
     # csv_writer.writerow(['link', 'src', 'alt'])
     for bit in soup_respon.select(".items > div"):
         # result_href = link_a.get('href')
-        # prod_href = bit.find('a').get('href')
-        nomer += 1
+        prod_href = bit.find('a').get('href')
+
         prod_name = bit.select_one(
             'a > span:last-child > span:first-child').get_text()
+        # prod_name_bit = prod_name
         prod_name_original = bit.select_one(
-            'a>span:last-child>span:nth-child(2)').text
-        prod_href = bit.select_one('a').get('href')
+            'a>span:last-child>span:nth-child(2)').get_text()
 
-        prod_price_url = '.items>div>div:last-child>div:first-child'
-
-        if bit.select_one(prod_price_url) is None:
-            prod_price = '0'
-        else:
-            prod_price = bit.select_one(prod_price_url).text
-            print(type(prod_price))
-        # prod_price2 = prod_price.text
-        # print(prod_price)
-
-        csv_writer.writerow(
-            {'nomer': nomer,
-             'name': prod_name,
-             'name_original': prod_name_original,
-             'href': prod_href,
-             'price': prod_price
-             })
-
-        # print(type(prod_name))
-        # print(type(prod_href))
-        # print(type(prod_price))
-        # print(prod_name_original)
+        print(prod_name)
+        print(prod_name_original)
 
         # result_alt = bit.get('alt')
 
@@ -102,3 +83,10 @@ with open('111.csv', 'w', encoding='utf-8') as file:
 # writer.writerow(["a","b"])
 
         # csv_writer.writerow([result_url2])
+
+start_time = datetime.now()
+
+#Тут выполняются действия
+time.sleep(5)
+
+print(datetime.now() - start_time)
