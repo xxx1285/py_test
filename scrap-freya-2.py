@@ -42,8 +42,6 @@ with open('111.csv', 'w', encoding='utf-8') as file:
         else:
             prod_price = bit.select_one(prod_price_url).text
             prod_price = prod_price.replace(' ', '')[:-3]
-
-
         csv_writer.writerow(
             {'nomer': nomer,
              'name': prod_name,
