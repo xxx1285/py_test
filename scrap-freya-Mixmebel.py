@@ -39,11 +39,11 @@ for category in all_category_in_catalog:
         all_num_pages_category = all_num_pages_category.get('href')
         all_num_pages_category = int(all_num_pages_category[all_num_pages_category.find("=") + 1:]) + 1
 
-    with open('1201.csv', 'w', newline='', encoding="utf-8") as file:
+    with open('1202.csv', 'w', newline='', encoding="utf-8") as file:
         field_names = ['name_tovar_ua', 'alias', 'kod_tovar', 'brend', 'price', 'dlina',
                        'glubina', 'visota', 'spalnoe', 'image', 'mimage1', 'mimage2',
                        'mimage3', 'mimage4', 'mimage5', 'mimage6', 'mimage7', 'mimage8', 'mimage9',
-                       'mimage10', 'mimage11', 'color', 'proizvod', 'zag_razmer', 'material'
+                       'mimage10', 'mimage11', 'color', 'proizvod', 'zag_razmer', 'content'
                        ]
         csv_writer = csv.DictWriter(file, fieldnames=field_names, delimiter=';')
         csv_writer.writeheader()
@@ -74,22 +74,30 @@ for category in all_category_in_catalog:
                 #     property="product:price:amount").get('content')
                 price = 0
 
-                """ TODO: Brend  """
-                # brend = soup_tovar.select_one('img[src="/img/ico/torgovaya-marka.png"]').next_sibling
-                # brend = 'Notti' if brend is None else brend.get_text()
+                """ TODO: Brend + Kraina  """
                 brend = 'MX'
+                proizvod = 'Україна'
+
 
                 """ TODO:  Rozmir  """
-                # zag_razmer = soup_tovar.select_one('b["Розмір:"]').next_sibling
-                # print(zag_razmer)
-                # zag_razmer1 = soup_tovar.select_one('<b>Розмір:</b>').next_sibling
-                # zag_razmer2 = soup_tovar.find("b", string="Розмір:") # розмир + символ какойто после :
-                # zag_razmer2 = soup_tovar.find("b", string=re.compile("Розмір:"))
-                zag_razmer2 = soup_tovar.find("b", "Розмір:")
-                zag_razmer2 = zag_razmer2.next_sibling
-                print(zag_razmer2)
-#     import re
-# soup.find(string=re.compile("sisters"))
+
+                zag_razmer = soup_tovar.select_one('#tab-description p:nth-child(1)').text
+                zag_razmer = zag_razmer[8:]
+
+                """ TODO:  Content  """
+                content = soup_tovar.select_one('#tab-description').text
+
+                # if soup_tovar.find("b", string=re.compile("Розмір:")):
+                #     zag_razmer = soup_tovar.find("b", string=re.compile("Розмір:")).next_sibling
+                # elif soup_tovar.find("b", string=re.compile("Размер:")):
+                #     zag_razmer = soup_tovar.find("b", string=re.compile("Размер:")).next_sibling
+                # elif soup_tovar.find("strong", string=re.compile("Розмір:")):
+                #     zag_razmer = soup_tovar.find("strong", string=re.compile("Розмір:")).next_sibling
+                # else:
+                #     zag_razmer = "999999999"
+
+
+
 # 'Once upon a time there were three little sisters; and their names were\n'
 
                 # # dlina = soup_tovar.select_one(
@@ -253,105 +261,36 @@ for category in all_category_in_catalog:
                 # else:
                 #     img20 = '0'
 
-                # csv_writer.writerow({
-                #     'name_tovar_ua': name_tovar_ua,
-                #     'kod_tovar': kod_tovar,
-                #     # 'name_catalog': name_catalog,
-                #     'brend': brend,
-                #     'price': price,
-                #     'dlina': dlina,
-                #     'glubina': glubina,
-                #     'visota': visota,
-                #     'spalnoe': spalnoe,
-                #     'image': img0,
-                #     'mimage1': img1,
-                #     'mimage2': img2,
-                #     'mimage3': img3,
-                #     'mimage4': img4,
-                #     'mimage5': img5,
-                #     'mimage6': img6,
-                #     'mimage7': img7,
-                #     'mimage8': img8,
-                #     'mimage9': img9,
-                #     'mimage10': img10,
-                #     'mimage11': img11,
-                #     'mimage12': img12,
-                #     'mimage13': img13,
-                #     'mimage14': img14,
-                #     'mimage15': img15,
-                #     'mimage16': img16,
-                #     'mimage17': img17,
-                #     'mimage18': img18,
-                #     'mimage19': img19,
-                #     'mimage20': img20
-                # })
-
-n = 5
-
-amount = 0
-
-for i in range(1, n + 1):
-    amount += i
-
-print(amount) # 15
-
-
-
-
-total = 0
-for i in range(2, 5):
-    total += i
-print(total)
-
-
-
-
-i = 1
-while i < 6:
-  print(i)
-  if (i == 3):
-    break
-  i += 1
-
-
-for i in range(10, 9, -1):
-    print(i)
-
-
-
-
-from typing import Union
-
-
-def calculate_profit(
-    amount: int, percent: Union[float, int], period: int
-) -> int:
-    # write your code here
-    year_profit = amount + (amount / 100) * percent
-    print(year_profit)
-    if period == 0:
-        calculate_profit = 0
-        return calculate_profit
-    else:
-        for i in range(period - 1):
-            year_profit = year_profit + (year_profit / 100) * percent
-            # year_profit += year_profit
-            # amount += amount
-            print(year_profit)
-
-    calculate_profit = year_profit - amount
-
-    return calculate_profit
-
-
-
-from typing import Union
-
-
-def calculate_profit(
-    amount: int, percent: Union[float, int], period: int
-) -> int:
-    profit = amount
-    for year in range(period):
-        profit *= 1 + percent / 100
-    return profit - amount
+                csv_writer.writerow({
+                    'name_tovar_ua': name_tovar_ua,
+                    # 'kod_tovar': kod_tovar,
+                    # 'name_catalog': name_catalog,
+                    'brend': brend,
+                    'price': price,
+                    'zag_razmer': zag_razmer,
+                    'content': content
+                    # 'glubina': glubina,
+                    # 'visota': visota,
+                    # 'spalnoe': spalnoe,
+                    # 'image': img0,
+                    # 'mimage1': img1,
+                    # 'mimage2': img2,
+                    # 'mimage3': img3,
+                    # 'mimage4': img4,
+                    # 'mimage5': img5,
+                    # 'mimage6': img6,
+                    # 'mimage7': img7,
+                    # 'mimage8': img8,
+                    # 'mimage9': img9,
+                    # 'mimage10': img10,
+                    # 'mimage11': img11,
+                    # 'mimage12': img12,
+                    # 'mimage13': img13,
+                    # 'mimage14': img14,
+                    # 'mimage15': img15,
+                    # 'mimage16': img16,
+                    # 'mimage17': img17,
+                    # 'mimage18': img18,
+                    # 'mimage19': img19,
+                    # 'mimage20': img20
+                })
