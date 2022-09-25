@@ -1,6 +1,6 @@
 
 
-from turtle import color
+# from turtle import color
 from bs4 import BeautifulSoup
 import re
 from transliterate import slugify
