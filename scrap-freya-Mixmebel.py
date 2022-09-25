@@ -1,5 +1,6 @@
 
 
+from turtle import color
 from bs4 import BeautifulSoup
 import re
 from transliterate import slugify
@@ -40,10 +41,10 @@ for category in all_category_in_catalog:
         all_num_pages_category = int(all_num_pages_category[all_num_pages_category.find("=") + 1:]) + 1
 
     with open('1202.csv', 'w', newline='', encoding="utf-8") as file:
-        field_names = ['name_tovar_ua', 'alias', 'kod_tovar', 'brend', 'price', 'dlina',
-                       'glubina', 'visota', 'spalnoe', 'image', 'mimage1', 'mimage2',
-                       'mimage3', 'mimage4', 'mimage5', 'mimage6', 'mimage7', 'mimage8', 'mimage9',
-                       'mimage10', 'mimage11', 'color', 'proizvod', 'zag_razmer', 'content'
+        field_names = ['name_tovar_ua', 'alias', 'kod_tovar', 'brend', 'price', 
+                       'image', 'mimage1', 'mimage2', 'mimage3', 'mimage4', 'mimage5', 
+                       'mimage6', 'mimage7', 'mimage8', 'mimage9', 'mimage10', 'mimage11',
+                       'color_tovar', 'proizvod', 'zag_razmer', 'content'
                        ]
         csv_writer = csv.DictWriter(file, fieldnames=field_names, delimiter=';')
         csv_writer.writeheader()
@@ -85,7 +86,21 @@ for category in all_category_in_catalog:
                 zag_razmer = zag_razmer[8:]
 
                 """ TODO:  Content  """
-                content = soup_tovar.select_one('#tab-description').text
+                content = soup_tovar.select_one('#tab-description')
+                print(content)
+
+                """ TODO:  Color  """
+
+                if soup_tovar.find("b", string=re.compile("Колір:")):
+                    color_tovar = soup_tovar.find("b", string=re.compile("Колір:")).next_sibling.text
+                elif soup_tovar.find("b", string=re.compile("Цвет:")):
+                    color_tovar = soup_tovar.find("b", string=re.compile("Цвет:")).next_sibling.text
+                elif soup_tovar.find("strong", string=re.compile("Колір:")):
+                    color_tovar = soup_tovar.find("strong", string=re.compile("Колір:")).next_sibling.text
+                else:
+                    color_tovar = 0
+
+                print(color_tovar)
 
                 # if soup_tovar.find("b", string=re.compile("Розмір:")):
                 #     zag_razmer = soup_tovar.find("b", string=re.compile("Розмір:")).next_sibling
@@ -268,8 +283,8 @@ for category in all_category_in_catalog:
                     'brend': brend,
                     'price': price,
                     'zag_razmer': zag_razmer,
-                    'content': content
-                    # 'glubina': glubina,
+                    'content': content,
+                    'color_tovar': color_tovar
                     # 'visota': visota,
                     # 'spalnoe': spalnoe,
                     # 'image': img0,
