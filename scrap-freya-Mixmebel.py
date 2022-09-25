@@ -41,8 +41,8 @@ for category in all_category_in_catalog:
         all_num_pages_category = int(all_num_pages_category[all_num_pages_category.find("=") + 1:]) + 1
 
     with open('1202.csv', 'w', newline='', encoding="utf-8") as file:
-        field_names = ['name_tovar_ua', 'alias', 'kod_tovar', 'brend', 'price', 
-                       'image', 'mimage1', 'mimage2', 'mimage3', 'mimage4', 'mimage5', 
+        field_names = ['name_tovar_ua', 'alias', 'kod_tovar', 'brend', 'price',
+                       'image', 'mimage1', 'mimage2', 'mimage3', 'mimage4', 'mimage5',
                        'mimage6', 'mimage7', 'mimage8', 'mimage9', 'mimage10', 'mimage11',
                        'color_tovar', 'proizvod', 'zag_razmer', 'content'
                        ]
@@ -309,3 +309,11 @@ for category in all_category_in_catalog:
                     # 'mimage19': img19,
                     # 'mimage20': img20
                 })
+
+
+from slugify import slugify
+
+txt = 'ЛІЖКО АЙРІС (З ПІДЙОМНИМ МЕХАНІЗМОМ ЛІЖКО ОЛЬГА - 0,9М М"які ліжка)'
+r = slugify(txt, replacements=[['Ü', 'UE'], ['ü', 'ue'], ['і', 'i'], ['І', 'I'],
+                               ['ї', 'i'], ['є', 'e'], ['є', 'e'], ["'", '']])
+print(r)
