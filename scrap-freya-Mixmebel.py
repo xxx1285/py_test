@@ -2,7 +2,7 @@
 
 from bs4 import BeautifulSoup
 import re
-# from transliterate import slugify
+from transliterate import slugify
 import requests
 import csv
 import os
@@ -124,142 +124,142 @@ for category in all_category_in_catalog:
                 # else:
                 #     spalnoe = spalnoe.next_sibling.get_text()
 
-                # """ TODO: Kod Tovara """
-                # kod_tovar_1 = brend[:1].upper()
-                # kod_tovar_2 = brend[1:2].upper()
-                # kod_tovar_result = str(ord(kod_tovar_1)) + \
-                #     '-' + str(ord(kod_tovar_2))
-                # kod_tovar = str(brend[:1].upper() + '-' +
-                #                 price[:2] + '-' + kod_tovar_result + price[-2:])
+                """ TODO: Kod Tovara """
+                kod_tovar_1 = url_href[-1:].upper()
+                kod_tovar_2 = url_href[-6:-5].upper()
+                kod_tovar_3 = url_href[-10:-9]
+                kod_tovar_4 = url_href[-16:-15]
+                kod_tovar_result = str(ord(kod_tovar_1)) + \
+                    '-' + str(ord(kod_tovar_2)) + str(ord(kod_tovar_3)) + str(ord(kod_tovar_4))
 
-                # """ TODO: Number """
-                # nomer += 1
+                kod_tovar = str('MX' + kod_tovar_result)
 
-                # """ TODO: IMAGES """
+                """ TODO: Number """
+                nomer += 1
 
-                # all_images = soup_tovar.select(
-                #     '#thumbs_list #thumbs_list_frame li a')
+                """ TODO: IMAGES """
 
-                # all_images_name = []
+                all_images = soup_tovar.select('.product-info img')
+                all_images_name = []
 
-                # for images in all_images:
-                #     image_url = images.get('href')
-                #     image_content = requests.get(image_url).content
+                for images in all_images:
+                    image_url = images.get('data-zoom-image')
+                    image_content = requests.get(image_url).content
 
-                #     translit_name = slugify(name_tovar_ua)
-                #     translit_name2 = slugify(name_tovar_ua + ' пуф крісло')
+                    translit_name = slugify(name_tovar_ua)
+                    translit_name2 = slugify(name_tovar_ua + ' меблі Киев')
 
-                #     translit_name = translit_name2 if translit_name is None else translit_name
+                    translit_name = translit_name2 if translit_name is None else translit_name
 
-                #     transliter_name_image = translit_name + \
-                #         '-kiev-vinnitsya-kovel-lviv-ivano-frankivsk-ternopil' + str(image_number)
-                #     image_number += 1
+                    transliter_name_image = translit_name + \
+                        '-kiev-vinnitsya-kovel-lviv-ivano-frankivsk-ternopil' + str(image_number)
+                    image_number += 1
 
-                #     """ TODO: create folders """
-                #     work_dir = os.getcwd() + r"\images\konstanta-pufik"
-                #     path_images = os.path.join(work_dir, translit_name)
-                #     ''' TODO: if folders not, create new folders'''
-                #     if not os.path.exists(path_images):
-                #         os.mkdir(path_images)
+                    """ TODO: create folders """
+                    work_dir = os.getcwd() + r"\images\konstanta-pufik"
+                    path_images = os.path.join(work_dir, translit_name)
+                    ''' TODO: if folders not, create new folders'''
+                    if not os.path.exists(path_images):
+                        os.mkdir(path_images)
 
-                #     """ TODO: verification JPG and save on disk"""
-                #     _, ext = os.path.splitext(image_url)
-                #     if ext in (".jpg"):
-                #         with open(f'{path_images}/{transliter_name_image}.jpg', 'wb') as file:
-                #             file.write(image_content)
-                #     else:
-                #         print('Error ' + ext)
-                #         None
+                    """ TODO: verification JPG and save on disk"""
+                    _, ext = os.path.splitext(image_url)
+                    if ext in (".jpg"):
+                        with open(f'{path_images}/{transliter_name_image}.jpg', 'wb') as file:
+                            file.write(image_content)
+                    else:
+                        print('Error ' + ext)
+                        None
 
-                #     all_images_name.append(
-                #         f'images/konstanta-site/krislo-pufik/{translit_name}/{transliter_name_image}.jpg')
+                    all_images_name.append(
+                        f'images/konstanta-site/krislo-pufik/{translit_name}/{transliter_name_image}.jpg')
 
-                # """ TODO: images to img1, img2, img3,... """
+                """ TODO: images to img1, img2, img3,... """
 
-                # len_all_images_name = len(all_images_name)
+                len_all_images_name = len(all_images_name)
 
-                # img0 = all_images_name[0]
+                img0 = all_images_name[0]
 
-                # if 1 < len_all_images_name:
-                #     img1 = all_images_name[1]
-                # else:
-                #     img1 = '0'
-                # if 2 < len_all_images_name:
-                #     img2 = all_images_name[2]
-                # else:
-                #     img2 = '0'
-                # if 3 < len_all_images_name:
-                #     img3 = all_images_name[3]
-                # else:
-                #     img3 = '0'
-                # if 4 < len_all_images_name:
-                #     img4 = all_images_name[4]
-                # else:
-                #     img4 = '0'
-                # if 5 < len_all_images_name:
-                #     img5 = all_images_name[5]
-                # else:
-                #     img5 = '0'
-                # if 6 < len_all_images_name:
-                #     img6 = all_images_name[6]
-                # else:
-                #     img6 = '0'
-                # if 7 < len_all_images_name:
-                #     img7 = all_images_name[7]
-                # else:
-                #     img7 = '0'
-                # if 8 < len_all_images_name:
-                #     img8 = all_images_name[8]
-                # else:
-                #     img8 = '0'
-                # if 9 < len_all_images_name:
-                #     img9 = all_images_name[9]
-                # else:
-                #     img9 = '0'
-                # if 10 < len_all_images_name:
-                #     img10 = all_images_name[10]
-                # else:
-                #     img10 = '0'
-                # if 11 < len_all_images_name:
-                #     img11 = all_images_name[11]
-                # else:
-                #     img11 = '0'
-                # if 12 < len_all_images_name:
-                #     img12 = all_images_name[12]
-                # else:
-                #     img12 = '0'
-                # if 13 < len_all_images_name:
-                #     img13 = all_images_name[13]
-                # else:
-                #     img13 = '0'
-                # if 14 < len_all_images_name:
-                #     img14 = all_images_name[14]
-                # else:
-                #     img14 = '0'
-                # if 15 < len_all_images_name:
-                #     img15 = all_images_name[15]
-                # else:
-                #     img15 = '0'
-                # if 16 < len_all_images_name:
-                #     img16 = all_images_name[16]
-                # else:
-                #     img16 = '0'
-                # if 17 < len_all_images_name:
-                #     img17 = all_images_name[17]
-                # else:
-                #     img17 = '0'
-                # if 18 < len_all_images_name:
-                #     img18 = all_images_name[18]
-                # else:
-                #     img18 = '0'
-                # if 19 < len_all_images_name:
-                #     img19 = all_images_name[19]
-                # else:
-                #     img19 = '0'
-                # if 20 < len_all_images_name:
-                #     img20 = all_images_name[20]
-                # else:
-                #     img20 = '0'
+                if 1 < len_all_images_name:
+                    img1 = all_images_name[1]
+                else:
+                    img1 = '0'
+                if 2 < len_all_images_name:
+                    img2 = all_images_name[2]
+                else:
+                    img2 = '0'
+                if 3 < len_all_images_name:
+                    img3 = all_images_name[3]
+                else:
+                    img3 = '0'
+                if 4 < len_all_images_name:
+                    img4 = all_images_name[4]
+                else:
+                    img4 = '0'
+                if 5 < len_all_images_name:
+                    img5 = all_images_name[5]
+                else:
+                    img5 = '0'
+                if 6 < len_all_images_name:
+                    img6 = all_images_name[6]
+                else:
+                    img6 = '0'
+                if 7 < len_all_images_name:
+                    img7 = all_images_name[7]
+                else:
+                    img7 = '0'
+                if 8 < len_all_images_name:
+                    img8 = all_images_name[8]
+                else:
+                    img8 = '0'
+                if 9 < len_all_images_name:
+                    img9 = all_images_name[9]
+                else:
+                    img9 = '0'
+                if 10 < len_all_images_name:
+                    img10 = all_images_name[10]
+                else:
+                    img10 = '0'
+                if 11 < len_all_images_name:
+                    img11 = all_images_name[11]
+                else:
+                    img11 = '0'
+                if 12 < len_all_images_name:
+                    img12 = all_images_name[12]
+                else:
+                    img12 = '0'
+                if 13 < len_all_images_name:
+                    img13 = all_images_name[13]
+                else:
+                    img13 = '0'
+                if 14 < len_all_images_name:
+                    img14 = all_images_name[14]
+                else:
+                    img14 = '0'
+                if 15 < len_all_images_name:
+                    img15 = all_images_name[15]
+                else:
+                    img15 = '0'
+                if 16 < len_all_images_name:
+                    img16 = all_images_name[16]
+                else:
+                    img16 = '0'
+                if 17 < len_all_images_name:
+                    img17 = all_images_name[17]
+                else:
+                    img17 = '0'
+                if 18 < len_all_images_name:
+                    img18 = all_images_name[18]
+                else:
+                    img18 = '0'
+                if 19 < len_all_images_name:
+                    img19 = all_images_name[19]
+                else:
+                    img19 = '0'
+                if 20 < len_all_images_name:
+                    img20 = all_images_name[20]
+                else:
+                    img20 = '0'
 
                 csv_writer.writerow({
                     'name_tovar_ua': name_tovar_ua,
