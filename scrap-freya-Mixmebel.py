@@ -1,5 +1,5 @@
 # from turtle import color
-from ast import alias
+# from ast import alias
 from bs4 import BeautifulSoup
 import re
 from slugify import slugify
@@ -54,7 +54,7 @@ for category in all_category_in_catalog:
         replacements_symbols = [['Ü', 'UE'], ['ü', 'ue'], ['і', 'i'],
             ['І', 'I'], ['ї', 'i'], ['є', 'e'], ['є', 'e'], ["'", '']]
         alias_catalog = slugify(name_catalog.lower(), replacements=replacements_symbols)
-        
+
 
         for page in range(1, all_num_pages_category):  # TODO:  number of page (страниц на 1 больше)
 
@@ -82,7 +82,6 @@ for category in all_category_in_catalog:
                 """ Brend + Kraina  """
                 brend = 'MX'
                 proizvod = 'Україна'
-
 
                 """ Rozmir  """
 
@@ -181,7 +180,7 @@ for category in all_category_in_catalog:
 
                     """ TODO: create folders """
                     work_dir = os.getcwd() + r"\images\mix-mebel"
-                    path_images = os.path.join(work_dir, translit_name)
+                    path_images = os.path.join(work_dir, alias_catalog, translit_name)
                     ''' TODO: if folders not, create new folders'''
                     if not os.path.exists(path_images):
                         os.mkdir(path_images)
@@ -196,7 +195,7 @@ for category in all_category_in_catalog:
                         None
 
                     all_images_name.append(
-                        f'images/konstanta-site/krislo-pufik/{translit_name}/{transliter_name_image}.jpg')
+                        f'images/mix-mebel/{alias_catalog}/{translit_name}/{transliter_name_image}.jpg')
 
                 """ TODO: images to img1, img2, img3,... """
 
@@ -204,6 +203,13 @@ for category in all_category_in_catalog:
 
                 img0 = all_images_name[0]
 
+                img = 0
+
+                # for i in range(1, 12):
+                #     if i < len_all_images_name:
+                #         img[i] = all_images_name[i]
+                #     else:
+                #         img[i] = '0'
                 if 1 < len_all_images_name:
                     img1 = all_images_name[1]
                 else:
@@ -248,66 +254,66 @@ for category in all_category_in_catalog:
                     img11 = all_images_name[11]
                 else:
                     img11 = '0'
-                if 12 < len_all_images_name:
-                    img12 = all_images_name[12]
-                else:
-                    img12 = '0'
-                if 13 < len_all_images_name:
-                    img13 = all_images_name[13]
-                else:
-                    img13 = '0'
-                if 14 < len_all_images_name:
-                    img14 = all_images_name[14]
-                else:
-                    img14 = '0'
-                if 15 < len_all_images_name:
-                    img15 = all_images_name[15]
-                else:
-                    img15 = '0'
-                if 16 < len_all_images_name:
-                    img16 = all_images_name[16]
-                else:
-                    img16 = '0'
-                if 17 < len_all_images_name:
-                    img17 = all_images_name[17]
-                else:
-                    img17 = '0'
-                if 18 < len_all_images_name:
-                    img18 = all_images_name[18]
-                else:
-                    img18 = '0'
-                if 19 < len_all_images_name:
-                    img19 = all_images_name[19]
-                else:
-                    img19 = '0'
-                if 20 < len_all_images_name:
-                    img20 = all_images_name[20]
-                else:
-                    img20 = '0'
+                # if 12 < len_all_images_name:
+                #     img12 = all_images_name[12]
+                # else:
+                #     img12 = '0'
+                # if 13 < len_all_images_name:
+                #     img13 = all_images_name[13]
+                # else:
+                #     img13 = '0'
+                # if 14 < len_all_images_name:
+                #     img14 = all_images_name[14]
+                # else:
+                #     img14 = '0'
+                # if 15 < len_all_images_name:
+                #     img15 = all_images_name[15]
+                # else:
+                #     img15 = '0'
+                # if 16 < len_all_images_name:
+                #     img16 = all_images_name[16]
+                # else:
+                #     img16 = '0'
+                # if 17 < len_all_images_name:
+                #     img17 = all_images_name[17]
+                # else:
+                #     img17 = '0'
+                # if 18 < len_all_images_name:
+                #     img18 = all_images_name[18]
+                # else:
+                #     img18 = '0'
+                # if 19 < len_all_images_name:
+                #     img19 = all_images_name[19]
+                # else:
+                #     img19 = '0'
+                # if 20 < len_all_images_name:
+                #     img20 = all_images_name[20]
+                # else:
+                #     img20 = '0'
 
                 csv_writer.writerow({
                     'name_tovar_ua': name_tovar_ua,
-                    # 'kod_tovar': kod_tovar,
-                    # 'name_catalog': name_catalog,
+                    'kod_tovar': kod_tovar,
+                    'name_catalog': name_catalog,
                     'brend': brend,
                     'price': price,
                     'zag_razmer': zag_razmer,
                     'content': content,
-                    'color_tovar': color_tovar
-                    # 'visota': visota,
-                    # 'spalnoe': spalnoe,
-                    # 'image': img0,
-                    # 'mimage1': img1,
-                    # 'mimage2': img2,
-                    # 'mimage3': img3,
-                    # 'mimage4': img4,
-                    # 'mimage5': img5,
-                    # 'mimage6': img6,
-                    # 'mimage7': img7,
-                    # 'mimage8': img8,
-                    # 'mimage9': img9,
-                    # 'mimage10': img10,
-                    # 'mimage11': img11,
+                    'color_tovar': color_tovar,
+                    'alias': alias_tovar,
+                    'proizvod': proizvod,
+                    'image': img0,
+                    'mimage1': img1,
+                    'mimage2': img2,
+                    'mimage3': img3,
+                    'mimage4': img4,
+                    'mimage5': img5,
+                    'mimage6': img6,
+                    'mimage7': img7,
+                    'mimage8': img8,
+                    'mimage9': img9,
+                    'mimage10': img10,
+                    'mimage11': img11
                     # 'mimage12': img12,
                     # 'mimage13': img13,
                     # 'mimage14': img14,
@@ -318,5 +324,3 @@ for category in all_category_in_catalog:
                     # 'mimage19': img19,
                     # 'mimage20': img20
                 })
-
-
