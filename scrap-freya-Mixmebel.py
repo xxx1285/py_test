@@ -1,9 +1,8 @@
-
-
 # from turtle import color
+from ast import alias
 from bs4 import BeautifulSoup
 import re
-from transliterate import slugify
+from slugify import slugify
 import requests
 import csv
 import os
@@ -13,7 +12,6 @@ headers = {
         (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'
 }
 link_site_ua = 'https://mixmebli.com/catalogs'
-# link_catalog = 'https://constanta.ua/56-krisla-ta-pufi?p='
 
 image_number = 0
 nomer = 0
@@ -49,8 +47,14 @@ for category in all_category_in_catalog:
         csv_writer = csv.DictWriter(file, fieldnames=field_names, delimiter=';')
         csv_writer.writeheader()
 
-        """ TODO: Name Catalog """
+        """ Name Catalog """
         name_catalog = soup_category.select_one('.category-title').text
+
+        """ alias Catalog """
+        replacements_symbols = [['Ü', 'UE'], ['ü', 'ue'], ['і', 'i'],
+            ['І', 'I'], ['ї', 'i'], ['є', 'e'], ['є', 'e'], ["'", '']]
+        alias_catalog = slugify(name_catalog.lower(), replacements=replacements_symbols)
+        
 
         for page in range(1, all_num_pages_category):  # TODO:  number of page (страниц на 1 больше)
 
@@ -60,36 +64,36 @@ for category in all_category_in_catalog:
 
             products_on_page = soup_page_category.select('.product-block .name a[href]')
 
-            """ TODO: Перебор каждого товара на странице"""
+            """ Перебор каждого товара на странице"""
             for link_tovar in products_on_page:
                 url_href = link_tovar.get('href')
                 response_tovar = requests.get(url_href, headers=headers).text
                 soup_tovar = BeautifulSoup(response_tovar, 'lxml')
 
-                """ TODO: Name UA """
+                """ Name UA """
                 name_tovar_ua = soup_tovar.select_one('.page-product .title-product').text
                 print(name_tovar_ua)
 
-                """ TODO: PRICE """
+                """ PRICE """
                 # price = soup_tovar.find(
                 #     property="product:price:amount").get('content')
                 price = 0
 
-                """ TODO: Brend + Kraina  """
+                """ Brend + Kraina  """
                 brend = 'MX'
                 proizvod = 'Україна'
 
 
-                """ TODO:  Rozmir  """
+                """ Rozmir  """
 
                 zag_razmer = soup_tovar.select_one('#tab-description p:nth-child(1)').text
                 zag_razmer = zag_razmer[8:]
 
-                """ TODO:  Content  """
+                """ Content  """
                 content = soup_tovar.select_one('#tab-description')
                 print(content)
 
-                """ TODO:  Color  """
+                """ Color  """
 
                 if soup_tovar.find("b", string=re.compile("Колір:")):
                     color_tovar = soup_tovar.find("b", string=re.compile("Колір:")).next_sibling.text
@@ -149,6 +153,11 @@ for category in all_category_in_catalog:
 
                 kod_tovar = str('MX' + kod_tovar_result)
 
+                """ TODO: ALIAS """
+                alias_tovar = slugify(name_tovar_ua.lower(), replacements=replacements_symbols)
+                print(alias_tovar)
+
+
                 """ TODO: Number """
                 nomer += 1
 
@@ -161,9 +170,9 @@ for category in all_category_in_catalog:
                     image_url = images.get('data-zoom-image')
                     image_content = requests.get(image_url).content
 
-                    translit_name = slugify(name_tovar_ua)
-                    translit_name2 = slugify(name_tovar_ua + ' меблі Киев')
-
+                    """ transliterats images """
+                    translit_name = slugify(name_tovar_ua.lower(), replacements=replacements_symbols)
+                    translit_name2 = slugify(name_tovar_ua + ' МХ меблі Киев')
                     translit_name = translit_name2 if translit_name is None else translit_name
 
                     transliter_name_image = translit_name + \
@@ -171,7 +180,7 @@ for category in all_category_in_catalog:
                     image_number += 1
 
                     """ TODO: create folders """
-                    work_dir = os.getcwd() + r"\images\konstanta-pufik"
+                    work_dir = os.getcwd() + r"\images\mix-mebel"
                     path_images = os.path.join(work_dir, translit_name)
                     ''' TODO: if folders not, create new folders'''
                     if not os.path.exists(path_images):
@@ -311,9 +320,3 @@ for category in all_category_in_catalog:
                 })
 
 
-from slugify import slugify
-
-txt = 'ЛІЖКО АЙРІС (З ПІДЙОМНИМ МЕХАНІЗМОМ ЛІЖКО ОЛЬГА - 0,9М М"які ліжка)'
-r = slugify(txt, replacements=[['Ü', 'UE'], ['ü', 'ue'], ['і', 'i'], ['І', 'I'],
-                               ['ї', 'i'], ['є', 'e'], ['є', 'e'], ["'", '']])
-print(r)
