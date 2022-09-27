@@ -21,31 +21,30 @@ response = requests.get(link_site_ua, headers=headers).text
 soup = BeautifulSoup(response, 'lxml')
 all_category_in_catalog = soup.select(".category-wall .caption a")
 
-# CATEGORY CATALOG
+with open('1202.csv', 'w', newline='', encoding="utf-8") as file:
+    field_names = ['name_tovar_ua', 'description', 'alias', 'kod_tovar', 'brend', 'price',
+                    'image', 'mimage1', 'mimage2', 'mimage3', 'mimage4', 'mimage5',
+                    'mimage6', 'mimage7', 'mimage8', 'mimage9', 'mimage10', 'mimage11',
+                    'color_tovar', 'proizvod', 'zag_razmer', 'content'
+                    ]
+    csv_writer = csv.DictWriter(file, fieldnames=field_names, delimiter=';')
+    csv_writer.writeheader()
 
-for category in all_category_in_catalog:
-    url_category = category.get('href')
+    # CATEGORY CATALOG
+    for category in all_category_in_catalog:
+        url_category = category.get('href')
 
-    requests_category = requests.get(url_category, headers=headers).text
-    soup_category = BeautifulSoup(requests_category, 'lxml')
+        requests_category = requests.get(url_category, headers=headers).text
+        soup_category = BeautifulSoup(requests_category, 'lxml')
 
-    # NOMERA STRANITS CATEGORY
+        # NOMERA STRANITS CATEGORY
 
-    all_num_pages_category = soup_category.select_one(".pagination > li:last-child > a")
-    if all_num_pages_category is None:
-        all_num_pages_category = 2 # Range 1+1
-    else:
-        all_num_pages_category = all_num_pages_category.get('href')
-        all_num_pages_category = int(all_num_pages_category[all_num_pages_category.find("=") + 1:]) + 1
-
-    with open('1202.csv', 'w', newline='', encoding="utf-8") as file:
-        field_names = ['name_tovar_ua', 'alias', 'kod_tovar', 'brend', 'price',
-                       'image', 'mimage1', 'mimage2', 'mimage3', 'mimage4', 'mimage5',
-                       'mimage6', 'mimage7', 'mimage8', 'mimage9', 'mimage10', 'mimage11',
-                       'color_tovar', 'proizvod', 'zag_razmer', 'content'
-                       ]
-        csv_writer = csv.DictWriter(file, fieldnames=field_names, delimiter=';')
-        csv_writer.writeheader()
+        all_num_pages_category = soup_category.select_one(".pagination > li:last-child > a")
+        if all_num_pages_category is None:
+            all_num_pages_category = 2 # Range 1+1
+        else:
+            all_num_pages_category = all_num_pages_category.get('href')
+            all_num_pages_category = int(all_num_pages_category[all_num_pages_category.find("=") + 1:]) + 1
 
         """ Name Catalog """
         name_catalog = soup_category.select_one('.category-title').text
@@ -73,6 +72,9 @@ for category in all_category_in_catalog:
                 """ Name UA """
                 name_tovar_ua = soup_tovar.select_one('.page-product .title-product').text
                 print(name_tovar_ua)
+
+                """ Name Colections """
+                description = name_catalog
 
                 """ PRICE """
                 # price = soup_tovar.find(
@@ -116,7 +118,7 @@ for category in all_category_in_catalog:
 
 
 
-# 'Once upon a time there were three little sisters; and their names were\n'
+    # 'Once upon a time there were three little sisters; and their names were\n'
 
                 # # dlina = soup_tovar.select_one(
                 # #     '.product-information .tab-content #product-description-tab-content\
@@ -166,7 +168,12 @@ for category in all_category_in_catalog:
                 all_images_name = []
 
                 for images in all_images:
-                    image_url = images.get('data-zoom-image')
+                    # image_url = images.get('data-zoom-image')
+                    if images.get('data-zoom-image'):
+                        image_url = images.get('data-zoom-image')
+                    else:
+                        image_url = images.get('src')
+
                     image_content = requests.get(image_url).content
 
                     """ transliterats images """
@@ -183,7 +190,8 @@ for category in all_category_in_catalog:
                     path_images = os.path.join(work_dir, alias_catalog, translit_name)
                     ''' TODO: if folders not, create new folders'''
                     if not os.path.exists(path_images):
-                        os.mkdir(path_images)
+                        # os.mkdir(path_images)
+                        os.makedirs(path_images)
 
                     """ TODO: verification JPG and save on disk"""
                     _, ext = os.path.splitext(image_url)
@@ -293,15 +301,15 @@ for category in all_category_in_catalog:
 
                 csv_writer.writerow({
                     'name_tovar_ua': name_tovar_ua,
+                    'description': description,
                     'kod_tovar': kod_tovar,
-                    'name_catalog': name_catalog,
                     'brend': brend,
+                    'proizvod': proizvod,
                     'price': price,
                     'zag_razmer': zag_razmer,
                     'content': content,
                     'color_tovar': color_tovar,
                     'alias': alias_tovar,
-                    'proizvod': proizvod,
                     'image': img0,
                     'mimage1': img1,
                     'mimage2': img2,
