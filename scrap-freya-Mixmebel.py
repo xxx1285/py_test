@@ -21,12 +21,11 @@ response = requests.get(link_site_ua, headers=headers).text
 soup = BeautifulSoup(response, 'lxml')
 all_category_in_catalog = soup.select(".category-wall .caption a")
 
-with open('1202.csv', 'w', newline='', encoding="utf-8") as file:
-    field_names = ['name_tovar_ua', 'description', 'alias', 'kod_tovar', 'brend', 'price',
+with open('1333.csv', 'w', newline='', encoding="utf-8") as file:
+    field_names = ['pagetitle', 'description', 'alias', 'articul', 'brend', 'price', 'proizvod',
                     'image', 'mimage1', 'mimage2', 'mimage3', 'mimage4', 'mimage5',
                     'mimage6', 'mimage7', 'mimage8', 'mimage9', 'mimage10', 'mimage11',
-                    'color_tovar', 'proizvod', 'zag_razmer', 'content'
-                    ]
+                    'color', 'zag_razmer', 'content']
     csv_writer = csv.DictWriter(file, fieldnames=field_names, delimiter=';')
     csv_writer.writeheader()
 
@@ -54,7 +53,6 @@ with open('1202.csv', 'w', newline='', encoding="utf-8") as file:
             ['І', 'I'], ['ї', 'i'], ['є', 'e'], ['є', 'e'], ["'", '']]
         alias_catalog = slugify(name_catalog.lower(), replacements=replacements_symbols)
 
-
         for page in range(1, all_num_pages_category):  # TODO:  number of page (страниц на 1 больше)
 
             response_page_category = requests.get(f'{url_category}?page={page})', headers=headers).text
@@ -70,15 +68,13 @@ with open('1202.csv', 'w', newline='', encoding="utf-8") as file:
                 soup_tovar = BeautifulSoup(response_tovar, 'lxml')
 
                 """ Name UA """
-                name_tovar_ua = soup_tovar.select_one('.page-product .title-product').text
-                print(name_tovar_ua)
+                pagetitle = soup_tovar.select_one('.page-product .title-product').text
 
                 """ Name Colections """
                 description = name_catalog
 
                 """ PRICE """
-                # price = soup_tovar.find(
-                #     property="product:price:amount").get('content')
+                # price = soup_tovar.find(property="product:price:amount").get('content')
                 price = 0
 
                 """ Brend + Kraina  """
@@ -86,16 +82,13 @@ with open('1202.csv', 'w', newline='', encoding="utf-8") as file:
                 proizvod = 'Україна'
 
                 """ Rozmir  """
-
                 zag_razmer = soup_tovar.select_one('#tab-description p:nth-child(1)').text
                 zag_razmer = zag_razmer[8:]
 
                 """ Content  """
                 content = soup_tovar.select_one('#tab-description')
-                print(content)
 
                 """ Color  """
-
                 if soup_tovar.find("b", string=re.compile("Колір:")):
                     color_tovar = soup_tovar.find("b", string=re.compile("Колір:")).next_sibling.text
                 elif soup_tovar.find("b", string=re.compile("Цвет:")):
@@ -105,8 +98,6 @@ with open('1202.csv', 'w', newline='', encoding="utf-8") as file:
                 else:
                     color_tovar = 0
 
-                print(color_tovar)
-
                 # if soup_tovar.find("b", string=re.compile("Розмір:")):
                 #     zag_razmer = soup_tovar.find("b", string=re.compile("Розмір:")).next_sibling
                 # elif soup_tovar.find("b", string=re.compile("Размер:")):
@@ -115,10 +106,6 @@ with open('1202.csv', 'w', newline='', encoding="utf-8") as file:
                 #     zag_razmer = soup_tovar.find("strong", string=re.compile("Розмір:")).next_sibling
                 # else:
                 #     zag_razmer = "999999999"
-
-
-
-    # 'Once upon a time there were three little sisters; and their names were\n'
 
                 # # dlina = soup_tovar.select_one(
                 # #     '.product-information .tab-content #product-description-tab-content\
@@ -144,7 +131,7 @@ with open('1202.csv', 'w', newline='', encoding="utf-8") as file:
                 # else:
                 #     spalnoe = spalnoe.next_sibling.get_text()
 
-                """ TODO: Kod Tovara """
+                """ TODO: Articul """
                 kod_tovar_1 = url_href[-1:].upper()
                 kod_tovar_2 = url_href[-6:-5].upper()
                 kod_tovar_3 = url_href[-10:-9]
@@ -152,12 +139,10 @@ with open('1202.csv', 'w', newline='', encoding="utf-8") as file:
                 kod_tovar_result = str(ord(kod_tovar_1)) + \
                     '-' + str(ord(kod_tovar_2)) + str(ord(kod_tovar_3)) + str(ord(kod_tovar_4))
 
-                kod_tovar = str('MX' + kod_tovar_result)
+                articul = str('MX' + kod_tovar_result)
 
                 """ TODO: ALIAS """
-                alias_tovar = slugify(name_tovar_ua.lower(), replacements=replacements_symbols)
-                print(alias_tovar)
-
+                alias_tovar = slugify(pagetitle.lower(), replacements=replacements_symbols)
 
                 """ TODO: Number """
                 nomer += 1
@@ -168,17 +153,17 @@ with open('1202.csv', 'w', newline='', encoding="utf-8") as file:
                 all_images_name = []
 
                 for images in all_images:
-                    # image_url = images.get('data-zoom-image')
-                    if images.get('data-zoom-image'):
-                        image_url = images.get('data-zoom-image')
-                    else:
-                        image_url = images.get('src')
+                    image_url = images.get('src')
+                    # if images.get('data-zoom-image'):
+                    #     image_url = images.get('data-zoom-image')
+                    # else:
+                    #     image_url = images.get('src')
 
                     image_content = requests.get(image_url).content
 
                     """ transliterats images """
-                    translit_name = slugify(name_tovar_ua.lower(), replacements=replacements_symbols)
-                    translit_name2 = slugify(name_tovar_ua + ' МХ меблі Киев')
+                    translit_name = slugify(pagetitle.lower(), replacements=replacements_symbols)
+                    translit_name2 = slugify(pagetitle + ' МХ меблі Киев')
                     translit_name = translit_name2 if translit_name is None else translit_name
 
                     transliter_name_image = translit_name + \
@@ -195,11 +180,13 @@ with open('1202.csv', 'w', newline='', encoding="utf-8") as file:
 
                     """ TODO: verification JPG and save on disk"""
                     _, ext = os.path.splitext(image_url)
+
+                    # if ext in [".jpg", ".JPG"]:
                     if ext in (".jpg"):
                         with open(f'{path_images}/{transliter_name_image}.jpg', 'wb') as file:
                             file.write(image_content)
                     else:
-                        print('Error ' + ext)
+                        print(pagetitle + 'Error ' + ext)
                         None
 
                     all_images_name.append(
@@ -300,15 +287,15 @@ with open('1202.csv', 'w', newline='', encoding="utf-8") as file:
                 #     img20 = '0'
 
                 csv_writer.writerow({
-                    'name_tovar_ua': name_tovar_ua,
+                    'pagetitle': pagetitle,
                     'description': description,
-                    'kod_tovar': kod_tovar,
+                    'articul': articul,
                     'brend': brend,
                     'proizvod': proizvod,
                     'price': price,
                     'zag_razmer': zag_razmer,
                     'content': content,
-                    'color_tovar': color_tovar,
+                    'color': color_tovar,
                     'alias': alias_tovar,
                     'image': img0,
                     'mimage1': img1,
