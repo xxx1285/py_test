@@ -1,5 +1,3 @@
-# from turtle import color
-# from ast import alias
 from bs4 import BeautifulSoup
 import re
 from slugify import slugify
@@ -21,7 +19,7 @@ response = requests.get(link_site_ua, headers=headers).text
 soup = BeautifulSoup(response, 'lxml')
 all_category_in_catalog = soup.select(".category-wall .caption a")
 
-with open('1333.csv', 'w', newline='', encoding="utf-8") as file:
+with open('1334.csv', 'w', newline='', encoding="utf-8") as file:
     field_names = ['pagetitle', 'description', 'alias', 'articul', 'brend', 'price', 'proizvod',
                     'image', 'mimage1', 'mimage2', 'mimage3', 'mimage4', 'mimage5',
                     'mimage6', 'mimage7', 'mimage8', 'mimage9', 'mimage10', 'mimage11',
@@ -37,14 +35,12 @@ with open('1333.csv', 'w', newline='', encoding="utf-8") as file:
         soup_category = BeautifulSoup(requests_category, 'lxml')
 
         # NOMERA STRANITS CATEGORY
-
         all_num_pages_category = soup_category.select_one(".pagination > li:last-child > a")
         if all_num_pages_category is None:
             all_num_pages_category = 2 # Range 1+1
         else:
             all_num_pages_category = all_num_pages_category.get('href')
             all_num_pages_category = int(all_num_pages_category[all_num_pages_category.find("=") + 1:]) + 1
-
         """ Name Catalog """
         name_catalog = soup_category.select_one('.category-title').text
 
@@ -69,6 +65,7 @@ with open('1333.csv', 'w', newline='', encoding="utf-8") as file:
 
                 """ Name UA """
                 pagetitle = soup_tovar.select_one('.page-product .title-product').text
+                print(pagetitle)
 
                 """ Name Colections """
                 description = name_catalog
@@ -97,15 +94,6 @@ with open('1333.csv', 'w', newline='', encoding="utf-8") as file:
                     color_tovar = soup_tovar.find("strong", string=re.compile("Колір:")).next_sibling.text
                 else:
                     color_tovar = 0
-
-                # if soup_tovar.find("b", string=re.compile("Розмір:")):
-                #     zag_razmer = soup_tovar.find("b", string=re.compile("Розмір:")).next_sibling
-                # elif soup_tovar.find("b", string=re.compile("Размер:")):
-                #     zag_razmer = soup_tovar.find("b", string=re.compile("Размер:")).next_sibling
-                # elif soup_tovar.find("strong", string=re.compile("Розмір:")):
-                #     zag_razmer = soup_tovar.find("strong", string=re.compile("Розмір:")).next_sibling
-                # else:
-                #     zag_razmer = "999999999"
 
                 # # dlina = soup_tovar.select_one(
                 # #     '.product-information .tab-content #product-description-tab-content\
@@ -153,13 +141,13 @@ with open('1333.csv', 'w', newline='', encoding="utf-8") as file:
                 all_images_name = []
 
                 for images in all_images:
-                    image_url = images.get('src')
-                    # if images.get('data-zoom-image'):
-                    #     image_url = images.get('data-zoom-image')
-                    # else:
-                    #     image_url = images.get('src')
+                    # image_url = images.get('data-zoom-image')
+                    if images.get('data-zoom-image'):
+                        image_url = images.get('data-zoom-image')
+                    else:
+                        image_url = images.get('src')
 
-                    image_content = requests.get(image_url).content
+                    image_content = requests.get(image_url, headers=headers).content
 
                     """ transliterats images """
                     translit_name = slugify(pagetitle.lower(), replacements=replacements_symbols)
@@ -167,7 +155,7 @@ with open('1333.csv', 'w', newline='', encoding="utf-8") as file:
                     translit_name = translit_name2 if translit_name is None else translit_name
 
                     transliter_name_image = translit_name + \
-                        '-kiev-vinnitsya-kovel-lviv-ivano-frankivsk-ternopil' + str(image_number)
+                        '-kiev-vinnitsya-kovel-lviv-borispol-ternopil' + str(image_number)
                     image_number += 1
 
                     """ TODO: create folders """
@@ -181,8 +169,8 @@ with open('1333.csv', 'w', newline='', encoding="utf-8") as file:
                     """ TODO: verification JPG and save on disk"""
                     _, ext = os.path.splitext(image_url)
 
-                    # if ext in [".jpg", ".JPG"]:
-                    if ext in (".jpg"):
+                    # if ext in (".jpg"):
+                    if ext in [".jpg", ".JPG"]:
                         with open(f'{path_images}/{transliter_name_image}.jpg', 'wb') as file:
                             file.write(image_content)
                     else:
