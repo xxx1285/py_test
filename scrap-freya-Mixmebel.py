@@ -135,7 +135,7 @@ with open('1334.csv', 'w', newline='', encoding="utf-8") as file:
                 """ TODO: Number """
                 nomer += 1
 
-                """ TODO: IMAGES """
+                """ TODO: IMAGES IMAGESIMAGES """
 
                 all_images = soup_tovar.select('.product-info img')
                 all_images_name = []
@@ -150,6 +150,7 @@ with open('1334.csv', 'w', newline='', encoding="utf-8") as file:
                     image_content = requests.get(image_url, headers=headers).content
 
                     """ transliterats images """
+
                     translit_name = slugify(pagetitle.lower(), replacements=replacements_symbols)
                     translit_name2 = slugify(pagetitle + ' МХ меблі Киев')
                     translit_name = translit_name2 if translit_name is None else translit_name
@@ -188,11 +189,6 @@ with open('1334.csv', 'w', newline='', encoding="utf-8") as file:
 
                 img = 0
 
-                # for i in range(1, 12):
-                #     if i < len_all_images_name:
-                #         img[i] = all_images_name[i]
-                #     else:
-                #         img[i] = '0'
                 if 1 < len_all_images_name:
                     img1 = all_images_name[1]
                 else:
