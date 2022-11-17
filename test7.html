@@ -1,106 +1,61 @@
-<footer class="site-footer bd-footer py-5 bg-dark border-top">
-    <div class="container pb-1 pb-lg-7">
-        <div class="row">
-            <div class="col-12 col-sm-4 mb-7 mb-lg-0">
-                <div class="mb-5 text-center me-auto">
-                    <a class="navbar-brand" href="/" aria-label="Space">
-                        [[$svg-LOGO-mini]]
-                    </a>
-                    <p class="link-secondary fs-5">В нас є <strong>меблі</strong> від яких <br /> вам буде комфортно
-                        спати, сидіти, жити. <br /> Твій інтернет-магазин меблів ...</p>
-                </div>
-            </div>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <base href="[[++site_url]]" />
+    <link rel="canonical" href="[[++site_url]][[~[[*resource_id]]]][[*alias]].html">
 
-            <div class="col-12 col-sm-4 mb-7 mb-sm-0">
-                <h5 class="mb-3">Company</h5>
-                <ul class="list-unstyled list-py-1 mb-0">
-                    <li><a class="link-sm link-secondary" href="https://g.page/freyamebel?share"><span
-                                class="bi-geo-alt-fill me-1"><svg xmlns="http://www.w3.org/2000/svg" width="20"
-                                    height="20" class="navbar-nav-svg" style="fill:#9c27b0;" viewBox="0 0 512 512"
-                                    role="img">
-                                    <use xlink:href="/assets/templ2021/css/svg/sprite.svg#pin"></use>
-                                </svg></span> м.Бориспіль, вул.Толстого 1</a></li>
-                    <li><a class="link-sm link-secondary" href="tel:+380934481340"><span
-                                class="bi-telephone-inbound-fill me-1"><svg xmlns="http://www.w3.org/2000/svg"
-                                    width="20" height="20" class="navbar-nav-svg d-inline-block" style="fill:#9c27b0;"
-                                    viewBox="0 0 58 58" role="img">
-                                    <use xlink:href="/assets/templ2021/css/svg/sprite.svg#telephon-ico"></use>
-                                </svg></span> +38 (093) 448-13-40</a></li>
-                    <li><a class="link-sm link-secondary" href="#">Blog</a></li>
-                    <li><a class="link-sm link-secondary" href="#">Customers <i
-                                class="bi-box-arrow-up-right small ms-1"></i></a></li>
-                </ul>
-            </div>
+    <title>[[*resource_id:is=`19`:then=`[[*pagetitle]]`:else=``]]
+        [[*resource_id:is=`48`:or:is=`49`:or:is=`50`:then=`≡ [[*pagetitle]] | купити ліжко Київ Бориспіль
+        інтернет-магазин InstaDivan`:else=``]]
+        [[*resource_id:inarray=`4,43`:then=`≡ [[*pagetitle]] | купити матрас Бориспіль FreyaMebel`:else=``]]
+        [[*resource_id:inarray=`5,8`:then=`≡ [[*pagetitle]] | купити диван Київ Бориспіль Одеса інтернет-магазин
+        InstaDivan`:else=``]]
+        [[*resource_id:inarray=`41,10,11`:then=`≡ [[*pagetitle]] | магазин диванів Бориспіль FreyaMebel`:else=``]]
+        [[*resource_id:inarray=`5,8`:then=``:else=`≡ [[*pagetitle]] | купити Київ Бориспіль Одеса інтернет-магазин
+        InstaDivan`]]
+    </title>
+    <meta name="description"
+        content="➜【[[*price]]грн.】купити в InctsDivan ✈ доставка по Україні ➤ [[*pagetitle]] 100% гарантія якості. Магазин меблів Київ, Бориспіль, Одеса">
+    <meta name="robots" content="INDEX,FOLLOW">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=5.0, width=device-width">
+    <link href="favicon.ico?v=5" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+    <!-- Theme CSS Bootstrap -->
+    <link rel="stylesheet"
+        href="/assets/site/bootstrap-5-1-3/bootstrap-5_1_3-dist/bootstrap-5.1.3-dist/css/bootstrap.min.css">
 
+    <link rel="stylesheet" href="/assets/site/js/flickity/flickity.css">
+    <link rel="stylesheet" href="/assets/site/js/flickity/fullscreen.css">
+    <!------MY Style-->
+    <link rel="stylesheet" href="/assets/site/css/min/mystyle.min.css?v=3.3">
+    <!----  Shema-json ---->
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "WebSite",
+            "name": "FreyaMebel - Меблі UA",
+            "url": "https://freyamebel.com"
+        }
+    </script>
+    [[$Shema-json-Product]]
 
-            <div class="col-12 col-sm-4 mb-7 mb-sm-0">
-                <h5 class="mb-3">Features</h5>
-                <ul class="list-unstyled list-py-1 mb-0">
-                    <li>1[[$bigmir]]</li>
-                </ul>
-            </div>
-        </div>
-
-
-        <div class="border-top my-7"></div>
-
-        <div class="row mb-7">
-            <div class="col-sm mb-3 mb-sm-0">
-                <!-- Socials -->
-                <ul class="list-inline list-separator mb-0">
-                    <li class="list-inline-item">
-                        <a class="text-body" href="kontakty/">Де знайти наш салон?</a>
-                    </li>
-                </ul>
-                <!-- End Socials -->
-            </div>
-
-            <div class="col-sm-auto">
-                <!-- Socials -->
-                <ul class="list-inline mb-0">
-
-                    <li class="list-inline-item">
-                        <a class="py-2 px-3" href="https://www.youtube.com/channel/UCJZuJmc57MmstKjN2ZFrIbw">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px"
-                                style="display:inline-block;vertical-align:middle;max-height: 25px;"
-                                class="navbar-nav-svg d-inline-block align-text-top" viewBox="0 0 576 512">
-                                <use xlink:href="/assets/templ2021/css/svg/sprite.svg#youtube-ico" fill="#9e9e9e"></use>
-                            </svg>
-                        </a>
-                    </li>
-
-                    <li class="list-inline-item">
-                        <a class="px-2" href="https://www.facebook.com/FreyaMebel">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px"
-                                style="display:inline-block;vertical-align:middle;max-height: 25px;"
-                                viewBox="0 0 320 512">
-                                <use xlink:href="/assets/templ2021/css/svg/sprite.svg#facebook-ico" fill="#9e9e9e">
-                                </use>
-                            </svg>
-                        </a>
-                    </li>
-
-                    <li class="list-inline-item">
-                        <a class="px-2" href="https://www.instagram.com/freya_mebel_ua/"><svg
-                                xmlns="http://www.w3.org/2000/svg" width="25px" height="25px"
-                                style="display:inline-block;vertical-align:middle;max-width: 25px;"
-                                viewBox="0 0 448 512">
-                                <use xlink:href="/assets/templ2021/css/svg/sprite.svg#instagram-ico" fill="#9e9e9e">
-                                </use>
-                            </svg>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Copyright -->
-        <div class="w-md-85 text-lg-center mx-lg-auto">
-            <p class="text-muted small">&#169;&nbsp;2022&nbsp;&nbsp;by
-                Freyamebel.com,&nbsp;Ukraine,&nbsp;Borispol,&nbsp;st.Lva Tolstogo,&nbsp;1&nbsp;|&nbsp;All Right Reserved
-            </p>
-        </div>
-        <!-- End Copyright -->
-    </div>
-    [[$FOOTER-script]]
-</footer>
+    <!--- Meta JSON ---->
+    <meta xmlns:og="http://opengraphprotocol.org/schema/" property="og:title" content="[[*pagetitle]]" />
+    <meta xmlns:og="http://opengraphprotocol.org/schema/" property="og:description"
+        content="➜【[[*price]]грн.】 в наявності ✈ доставка по Україні ➤ [[*pagetitle]] 100% гарантія якості. Магазин меблів [[*brend]] в Україні!" />
+    <meta xmlns:og="http://opengraphprotocol.org/schema/" property="og:image" content="[[++site_url]][[*image]]" />
+    <meta xmlns:og="http://opengraphprotocol.org/schema/" property="og:site_name" content="FreyaMebel - Меблі UA" />
+    <meta xmlns:og="http://opengraphprotocol.org/schema/" property="og:type" content="freyamebel:product" />
+    <meta xmlns:og="http://opengraphprotocol.org/schema/" property="og:url"
+        content="[[++site_url]][[~[[*resource_id]]]][[*alias]].html" />
+    <meta xmlns:og="http://opengraphprotocol.org/schema/" property="og:upc" content="[[*articul]]">
+    <meta xmlns:og="http://opengraphprotocol.org/schema/" property="product:price:amount" content="[[*price]]">
+    <meta xmlns:og="http://opengraphprotocol.org/schema/" property="product:price:currency" content="UAH">
+    <meta name="twitter:title" content="[[*pagetitle]]">
+    <meta name="twitter:description" content="[[*description]] Купити [[*pagetitle]] в магазині меблів Київ, Україна">
+    <meta name="twitter:image" content="[[++site_url]][[*image]]">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="pin:url" content="[[++site_url]][[~[[*resource_id]]]][[*alias]].html">
+    <link rel="apple-touch-icon-precomposed" sizes="148x148"
+        href="https://freyamebel.com/assets/freya-apple-touch-icon-148x148.jpg">
+    <link rel="apple-touch-icon" sizes="148x148"
+        href="https://freyamebel.com/assets/freya-apple-touch-icon-148x148.jpg">
+</head>

@@ -18,7 +18,7 @@ image_number = 0
 
 nomer = 0
 
-with open('128.csv', 'w', newline='', encoding="utf-8") as file:
+with open('128w.csv', 'w', newline='', encoding="utf-8") as file:
     field_names = ['name_tovar_ua', 'kod_tovar', 'brend', 'price', 'dlina',
                    'glubina', 'visota', 'spalnoe', 'image', 'mimage1', 'mimage2',
                    'mimage3', 'mimage4', 'mimage5', 'mimage6', 'mimage7', 'mimage8', 'mimage9',
@@ -116,7 +116,7 @@ with open('128.csv', 'w', newline='', encoding="utf-8") as file:
                 image_number += 1
 
                 """ TODO: create folders """
-                work_dir = os.getcwd() + r"\images\konstanta"
+                work_dir = os.getcwd() + r"\images\konstanta2"
                 path_images = os.path.join(work_dir, translit_name)
                 ''' TODO: if folders not, create new folders'''
                 if not os.path.exists(path_images):
