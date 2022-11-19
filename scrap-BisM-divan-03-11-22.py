@@ -15,18 +15,16 @@ link_site_ua = 'https://www.bis-m.ua'
 # link_site_ru = 'ru/'
 link_catalog = 'https://www.bis-m.ua/ua/myagkaya-mebel-bis-m'
 
-nomer = 0
-
-with open('bis-m-1.csv', 'w', newline='', encoding="utf-8") as file:
+with open('bis-m-4.csv', 'w', newline='', encoding="utf-8") as file:
     field_names = ['name_tovar_ua', 'articul', 'articul_url', 'brend',
-                   'price', 'cont_name_harakt','image', 'mimage1',
+                   'alias', 'price', 'cont_name_harakt', 'image', 'mimage1',
                    'mimage2', 'mimage3', 'mimage4', 'mimage5', 'mimage6',
                    'mimage7', 'mimage8', 'mimage9', 'mimage10', 'mimage11',
                    'mimage12', 'mimage13', 'mimage14', 'mimage15',
                    'mimage16', 'mimage17', 'mimage18', 'mimage19', 'mimage20',
                    'image_har_1', 'image_har_2', 'image_har_3', 'image_har_4',
-                   'image_har_5', 'image_har_6'
-                    ]
+                   'image_har_5', 'image_har_6', 'template'
+                   ]
     csv_writer = csv.DictWriter(file, fieldnames=field_names, delimiter=';')
     csv_writer.writeheader()
 
@@ -37,6 +35,7 @@ with open('bis-m-1.csv', 'w', newline='', encoding="utf-8") as file:
 
     for link in category_in_catalog:
         url_href = link.get('href')
+        print(url_href)
 
         """Прохід по каталогу з вибором HREF товарів"""
         response_1 = requests.get(f'{link_site_ua}{url_href})', headers=headers).text
@@ -54,7 +53,34 @@ with open('bis-m-1.csv', 'w', newline='', encoding="utf-8") as file:
 
             """ TODO: Name UA """
             name_tovar_ua = soup_link.select_one('#comjshop h1').get_text()
+            if url_href == ('/ua/myagkaya-mebel-bis-m/uglovye-divany.html'):
+                name_tovar_ua = "Кутовий диван " + name_tovar_ua
+            elif url_href == ('/ua/myagkaya-mebel-bis-m/pryamye-divany.html'):
+                name_tovar_ua = "Прямий диван " + name_tovar_ua
+            elif url_href == ('/ua/myagkaya-mebel-bis-m/modulnye-divany.html'):
+                name_tovar_ua = "Модульний диван " + name_tovar_ua
+            elif url_href == ('/ua/myagkaya-mebel-bis-m/krovati.html'):
+                name_tovar_ua = "Ліжко " + name_tovar_ua + " з мякою спинкою"
+            elif url_href == ('/ua/myagkaya-mebel-bis-m/kanape.html'):
+                name_tovar_ua = "Диван двомісний " + name_tovar_ua
+            elif url_href == ('/ua/myagkaya-mebel-bis-m/divany-s-ottomankoj.html'):
+                name_tovar_ua = "Диван з отаманкою " + name_tovar_ua
+            elif url_href == ('/ua/myagkaya-mebel-bis-m/kresla.html'):
+                name_tovar_ua = "Крісло " + name_tovar_ua
+            elif url_href == ('/ua/myagkaya-mebel-bis-m/kresla-krovati.html'):
+                name_tovar_ua = "Розкладне крісло " + name_tovar_ua
+            elif url_href == ('/ua/myagkaya-mebel-bis-m/kukhonnye-ugolki.html'):
+                name_tovar_ua = "Кухонний куточок " + name_tovar_ua
+            elif url_href == ('/ua/myagkaya-mebel-bis-m/divany-lajt.html'):
+                name_tovar_ua = "Диван недорогий " + name_tovar_ua
+            else:
+                name_tovar_ua
             print(name_tovar_ua)
+
+            """ TODO: Alias """
+            alias = slugify(name_tovar_ua) + '-kiev-borispol-brovary'
+            alias2 = articul_url
+            alias = alias2 if alias is None else alias
 
             """ TODO: PRICE """
             # price = soup_link.select_one('.productfull #block_price').text
@@ -70,9 +96,6 @@ with open('bis-m-1.csv', 'w', newline='', encoding="utf-8") as file:
             kod_prod_2 = soup_link.find("input", {"name": "category_id"}).attrs['value']
             kod_prod_3 = str(ord(name_tovar_ua[:1].upper()))
             articul = str(kod_prod_1 + '-' + kod_prod_2 + '-' + kod_prod_3)
-
-            """ TODO: Number """
-            nomer += 1
 
             """ TODO:  Content - Harakteristik  """
             content_harakterist_vse = soup_link.select('.extra_fields_el')
@@ -101,7 +124,10 @@ with open('bis-m-1.csv', 'w', newline='', encoding="utf-8") as file:
 
                     transliter_name_image = translit_name + \
                         '-kiev-odesa-vinnitsya-boryspil-' + str(image_number)
+
                     image_number += 1
+
+                    # alias = translit_name + '-kiev-borispol-brovary-' + image_number
 
                     """ TODO: create folders """
                     work_dir = os.getcwd() + r"\images\BisM-scrp"  # робоча директория
@@ -319,11 +345,16 @@ with open('bis-m-1.csv', 'w', newline='', encoding="utf-8") as file:
             else:
                 imghar6 = '0'
 
+            ''' TODO: Template'''
+            template = 3
+
             csv_writer.writerow({
                 'name_tovar_ua': name_tovar_ua,
                 'articul': articul,
                 'articul_url': articul_url,
+                'template': template,
                 'brend': brend,
+                'alias': alias,
                 'price': price,
                 'cont_name_harakt': cont_name_harakt,
                 'image': img0,
