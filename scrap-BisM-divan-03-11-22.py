@@ -1,5 +1,6 @@
 
 
+from PIL import Image
 from bs4 import BeautifulSoup
 from transliterate import slugify
 import requests
@@ -14,17 +15,17 @@ link_site_ua = 'https://www.bis-m.ua'
 # link_site_ru = 'ru/'
 link_catalog = 'https://www.bis-m.ua/ua/myagkaya-mebel-bis-m'
 
-image_number = 0
 nomer = 0
 
-with open('128w.csv', 'w', newline='', encoding="utf-8") as file:
-    field_names = ['name_tovar_ua', 'kod_tovar', 'kod_po_alias', 'brend',
-                   'price', 'image', 'mimage1',
+with open('bis-m-1.csv', 'w', newline='', encoding="utf-8") as file:
+    field_names = ['name_tovar_ua', 'articul', 'articul_url', 'brend',
+                   'price', 'cont_name_harakt','image', 'mimage1',
                    'mimage2', 'mimage3', 'mimage4', 'mimage5', 'mimage6',
                    'mimage7', 'mimage8', 'mimage9', 'mimage10', 'mimage11',
                    'mimage12', 'mimage13', 'mimage14', 'mimage15',
                    'mimage16', 'mimage17', 'mimage18', 'mimage19', 'mimage20',
-                   'img_big', 'articul_url'
+                   'image_har_1', 'image_har_2', 'image_har_3', 'image_har_4',
+                   'image_har_5', 'image_har_6'
                     ]
     csv_writer = csv.DictWriter(file, fieldnames=field_names, delimiter=';')
     csv_writer.writeheader()
@@ -48,11 +49,11 @@ with open('128w.csv', 'w', newline='', encoding="utf-8") as file:
             response_product = requests.get(f'{link_site_ua}{product_href})', headers=headers).text
             soup_link = BeautifulSoup(response_product, 'lxml')
 
-            """ Беремо унікальний урл товару що слугуватиме його кодом"""
-            kod_po_alias = (''.join(product_href.split('/')[-1]))
+            """ * Беремо унікальний урл товару що слугуватиме його кодом"""
+            articul_url = (''.join(product_href.split('/')[-1]))
 
             """ TODO: Name UA """
-            name_tovar_ua = soup_link.select_one('#comjshop h1').text
+            name_tovar_ua = soup_link.select_one('#comjshop h1').get_text()
             print(name_tovar_ua)
 
             """ TODO: PRICE """
@@ -63,27 +64,34 @@ with open('128w.csv', 'w', newline='', encoding="utf-8") as file:
             brend = 'BM'
 
             """ TODO: Kod Tovara """
-            # <input type="hidden" name="product_id" id="product_id" value="1552">
+            # <input name="product_id" id="product_id" value="1552">
             kod_prod_1 = soup_link.find("input", {"name": "product_id"}).attrs['value']
-            # <input type="hidden" name="category_id" id="category_id" value="3">
+            # <input name="category_id" id="category_id" value="3">
             kod_prod_2 = soup_link.find("input", {"name": "category_id"}).attrs['value']
             kod_prod_3 = str(ord(name_tovar_ua[:1].upper()))
-            kod_tovar = str(kod_prod_1 + '-' + kod_prod_2 + '-' + kod_prod_3)
+            articul = str(kod_prod_1 + '-' + kod_prod_2 + '-' + kod_prod_3)
 
             """ TODO: Number """
             nomer += 1
 
+            """ TODO:  Content - Harakteristik  """
+            content_harakterist_vse = soup_link.select('.extra_fields_el')
+            cont_name_harakt = []
+
+            for cont in content_harakterist_vse:
+                cont_name = cont.select_one('.extra_fields_name').get_text()
+                cont_harakt = cont.select_one('.extra_fields_value').get_text()
+                cont_name_harakt.append(f'<p class="text-start"><span class="fw-bold">{cont_name}</span>\
+                    <span class="text-decoration-underline">{cont_harakt}</span></p>')
+            cont_name_harakt = ''.join(cont_name_harakt)  # convert list[] in str
+
             """ TODO: IMAGES """
             all_images = soup_link.select('#list_product_image_middle img')
             all_images_name = []
-
+            image_number = 0
             for images in all_images:
-                # matr_visot = '0' if images is None else matr_visot.get_text()
-                # image_url = images.get('src')
-                # print(image_url)
                 if not (images.get('src') is None):
                     image_url = images.get('src')
-                    print(image_url)
                     image_content = requests.get(image_url).content
 
                     translit_name = slugify(name_tovar_ua)
@@ -92,33 +100,115 @@ with open('128w.csv', 'w', newline='', encoding="utf-8") as file:
                     translit_name = translit_name2 if translit_name is None else translit_name
 
                     transliter_name_image = translit_name + \
-                        '-kiev-odesa-vinnitsya-' + str(image_number)
+                        '-kiev-odesa-vinnitsya-boryspil-' + str(image_number)
                     image_number += 1
 
                     """ TODO: create folders """
-                    work_dir = os.getcwd() + r"\images\BisM-parce" # робоча директория
+                    work_dir = os.getcwd() + r"\images\BisM-scrp"  # робоча директория
                     path_images = os.path.join(work_dir, translit_name)
-                    ''' TODO: if folders not, create new folders'''
+
+                    ''' Створюємо папку якщо відсутня'''
                     if not os.path.exists(path_images):
                         os.mkdir(path_images)
 
-                    """ TODO: verification JPG and save on disk"""
-                    _, ext = os.path.splitext(image_url)  # ???
+                    """ перевіряємо розширення _ це назва, ехт - це розширення """
+                    _, ext = os.path.splitext(image_url)  # ext - берем розширення
 
                     if ext in (".jpg"):
                         with open(f'{path_images}/{transliter_name_image}.jpg', 'wb') as file:
                             file.write(image_content)
+                    elif ext in (".png"):
+                        with open(f'{path_images}/{transliter_name_image}.png', 'wb') as file:
+                            file.write(image_content)
+
+                            im = Image.open(f'{path_images}/{transliter_name_image}.png')
+                            fill_color = (225, 225, 225)  # your new background color
+                            im = im.convert("RGBA")   # it had mode P after DL it from OP
+                            if im.mode in ('RGBA', 'LA'):
+                                background = Image.new(im.mode[:-1], im.size, fill_color)
+                                background.paste(im, im.split()[-1])  # omit transparency
+                                im = background
+                            im.convert("RGB").save(f'{path_images}/{transliter_name_image}.jpg')
+                            # image_adress = (f'images/BisM-parce/{translit_name}/{transliter_name_image}.jpg')
+                            file.close()  # close file - free memory
+                            # del png
+                            os.remove(f'{path_images}/{transliter_name_image}.png')
                     else:
                         print('Error ' + ext)
                         None
 
                     all_images_name.append(
-                        f'images/BisM-parce/{translit_name}/{transliter_name_image}.jpg')
+                        f'images/BisM-scrp/{translit_name}/{transliter_name_image}.jpg')
+
+            """ TODO: IMG BIG"""
+            # img_big = soup_link.select_one('.ls-wrapper')
+
+            """ TODO: DOP Harakteristik IMAGES """
+            all_images_harakreristik = soup_link.select('.jshop_prod_description img')
+            all_images_harakter_list = []
+            if not (all_images_harakreristik is None):
+                for images in all_images_harakreristik:
+                    if not (images.get('src') is None):
+                        image_url = images.get('src')
+                        image_content = requests.get(f'{link_site_ua}{image_url}').content
+
+                        translit_name = slugify(name_tovar_ua)
+                        translit_name2 = slugify(name_tovar_ua + ' диван')
+                        translit_name = translit_name2 if translit_name is None else translit_name
+                        transliter_name_image = translit_name + \
+                            '-kiev-lviv-kamyanets-podolsk-' + str(image_number)
+                        image_number += 1
+
+                        """ TODO: create folders """
+                        work_dir = os.getcwd() + r"\images\BisM-scrp" # робоча директория
+                        path_images = os.path.join(work_dir, translit_name)
+
+                        ''' Створюємо папку якщо відсутня'''
+                        if not os.path.exists(path_images):
+                            os.mkdir(path_images)
+
+                        """ перевіряємо розширення _ це назва, ехт - це розширення"""
+                        _, ext = os.path.splitext(image_url)  # ext - берем розширення
+
+                        if ext in (".jpg"):
+                            with open(f'{path_images}/{transliter_name_image}.jpg', 'wb') as file:
+                                file.write(image_content)
+                        elif ext in (".webp"):
+                            with open(f'{path_images}/{transliter_name_image}.webp', 'wb') as file:
+                                file.write(image_content)
+                        elif ext in (".png"):
+                            with open(f'{path_images}/{transliter_name_image}.png', 'wb') as file:
+                                file.write(image_content)
+
+                                im = Image.open(f'{path_images}/{transliter_name_image}.png')
+                                fill_color = (225, 225, 225)  # your new background color
+                                im = im.convert("RGBA")   # it had mode P after DL it from OP
+                                if im.mode in ('RGBA', 'LA'):
+                                    background = Image.new(im.mode[:-1], im.size, fill_color)
+                                    background.paste(im, im.split()[-1])  # omit transparency
+                                    im = background
+                                im.convert("RGB").save(f'{path_images}/{transliter_name_image}.jpg')
+                                # image_adress = (f'images/BisM-parce/{translit_name}/{transliter_name_image}.jpg')
+                                file.close()  # close file - free memory
+                                # del png
+                                os.remove(f'{path_images}/{transliter_name_image}.png')
+                        else:
+                            print('Error ' + ext)
+                            None
+
+                        all_images_harakter_list.append(
+                            f'images/BisM-scrp/{translit_name}/{transliter_name_image}.jpg')
 
             """ TODO: images to img1, img2, img3,... """
             len_all_images_name = len(all_images_name)
+            img0 = all_images_name[0]
 
-            img0 = 0  #all_images_name[0]
+            # for i in range(1, 21):  # TODO:  num of page (стр на 1 больше)
+            #     if i < len_all_images_name:
+            #         img[i] = all_images_name[i]
+            #         print(img[i])
+            #     else:
+            #         img1 = '0'
 
             if 1 < len_all_images_name:
                 img1 = all_images_name[1]
@@ -201,12 +291,41 @@ with open('128w.csv', 'w', newline='', encoding="utf-8") as file:
             else:
                 img20 = '0'
 
+            """ TODO: All images haracteristik list """
+            len_all_images_harakteriskik = len(all_images_harakter_list)
+
+            if len_all_images_harakteriskik >= 1:
+                imghar1 = all_images_harakter_list[0]
+            else:
+                imghar1 = '0'
+            if len_all_images_harakteriskik >= 2:
+                imghar2 = all_images_harakter_list[1]
+            else:
+                imghar2 = '0'
+            if len_all_images_harakteriskik >= 3:
+                imghar3 = all_images_harakter_list[2]
+            else:
+                imghar3 = '0'
+            if len_all_images_harakteriskik >= 4:
+                imghar4 = all_images_harakter_list[3]
+            else:
+                imghar4 = '0'
+            if len_all_images_harakteriskik >= 5:
+                imghar5 = all_images_harakter_list[4]
+            else:
+                imghar5 = '0'
+            if len_all_images_harakteriskik >= 6:
+                imghar6 = all_images_harakter_list[5]
+            else:
+                imghar6 = '0'
+
             csv_writer.writerow({
                 'name_tovar_ua': name_tovar_ua,
-                'kod_tovar': kod_tovar,
-                'kod_po_alias': kod_po_alias,
+                'articul': articul,
+                'articul_url': articul_url,
                 'brend': brend,
                 'price': price,
+                'cont_name_harakt': cont_name_harakt,
                 'image': img0,
                 'mimage1': img1,
                 'mimage2': img2,
@@ -227,5 +346,11 @@ with open('128w.csv', 'w', newline='', encoding="utf-8") as file:
                 'mimage17': img17,
                 'mimage18': img18,
                 'mimage19': img19,
-                'mimage20': img20
+                'mimage20': img20,
+                'image_har_1': imghar1,
+                'image_har_2': imghar2,
+                'image_har_3': imghar3,
+                'image_har_4': imghar4,
+                'image_har_5': imghar5,
+                'image_har_6': imghar6
             })
